@@ -236,17 +236,17 @@ public class Main {
     static int[] evenOdd(int[] arr){
         int[] output = new int[arr.length];
         int zaehler = 0;
-        for(int i = 0; i < arr.length; i++){
-            if(arr[i] % 2 == 0){
-                output[zaehler] = arr[i];
+        for(int j : arr) {
+            if (j % 2 == 0) {
+                output[zaehler] = j;
                 zaehler++;
             }
         }
-        for(int i = 0; i < arr.length; i++){
-            if(arr[i] % 2 == 0){
+        for(int j : arr) {
+            if (j % 2 == 0) {
                 continue;
             }
-            output[zaehler] = arr[i];
+            output[zaehler] = j;
             zaehler++;
         }
         return output;
@@ -279,8 +279,6 @@ public class Main {
                         g[j][k] = ueber1;
                         continue;
                     }
-                    if(ueber1 == 0 && ueber2 == 0)
-                        continue;
                     g[j][k] = Math.min(ueber1, ueber2);
                 }
             }
@@ -325,12 +323,12 @@ public class Main {
     static int laengsteSequenzVonNullern(int[] array){
         int ergebnis = 0;
         int merker = 0;
-        for(int i = 0; i < array.length; i++){
-            if(array[i] == 0)
+        for(int j : array) {
+            if (j == 0)
                 merker++;
-            if(merker > ergebnis)
+            if (merker > ergebnis)
                 ergebnis = merker;
-            if(array[i] != 0)
+            if (j != 0)
                 merker = 0;
         }
         return ergebnis;
