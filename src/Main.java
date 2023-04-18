@@ -11,7 +11,12 @@ public class Main {
         List<Integer> tmp = Arrays.asList(nums);
         List<Integer> list = new LinkedList<>(tmp);
 
-        HashMap<String, String> test;
+        HashMap<String, Integer> test = new HashMap<>();
+        test.put("cdcd", 1);
+        test.put("dcdc", 2);
+        for(String s : test.keySet()) {
+            System.out.println(s + ": " + test.get(s));
+        }
     }
 
 
