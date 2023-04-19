@@ -1,5 +1,7 @@
 import java.util.*;
 
+//TODO rework almost everything
+
 public class MyGraph {
     private class Node{
         String name;
