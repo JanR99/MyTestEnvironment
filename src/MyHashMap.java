@@ -13,7 +13,7 @@ public class MyHashMap<K, V> {
 
     private Entry<K, V>[] entries;
     private int size = 0;
-    private int capacity = 500;
+    private int capacity = 509; // a prime number
 
 
     /**
@@ -21,7 +21,7 @@ public class MyHashMap<K, V> {
      * @param <K> Key of the entry
      * @param <V> Value of the entry
      */
-    private static class Entry<K, V> {
+    static class Entry<K, V> {
         K key;
         V value;
         Entry<K, V> next;
@@ -208,7 +208,8 @@ public class MyHashMap<K, V> {
      */
     public void putAll(MyHashMap<? extends K, ? extends V> map) {
         for(Entry<? extends K, ? extends V> entry : map.entries) {
-            put(entry.key, entry.value);
+            if(entry != null)
+                put(entry.key, entry.value);
         }
     }
 
@@ -271,6 +272,7 @@ public class MyHashMap<K, V> {
         // Added this line because intellij says current is always null???
         current = entries[hash];
         while(current != null) {
+            if(current.next == null) break;
             if(current.next.key.equals(key) && current.next.value.equals(value)) { // key with given value was found
                 current.next = current.next.next;
                 size--;
