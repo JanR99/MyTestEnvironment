@@ -34,7 +34,6 @@ public class MyLinkedList<T> {
     public MyLinkedList(MyLinkedList<T> list){
         this.head = null;
         this.size = list.size;
-        addAll(list);
     }
 
     /**
