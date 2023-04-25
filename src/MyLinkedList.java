@@ -133,6 +133,7 @@ public class MyLinkedList<T> {
      */
     public void clear(){
         head = null;
+        this.size = 0;
     }
 
     /**
