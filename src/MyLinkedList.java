@@ -588,9 +588,7 @@ public class MyLinkedList<T> {
 
             @Override
             public Object next() {
-                Node ans = current;
-                current = current.next;
-                return ans.value;
+                return current.next;
             }
         };
     }
