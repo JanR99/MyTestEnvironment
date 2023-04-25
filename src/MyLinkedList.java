@@ -31,8 +31,9 @@ public class MyLinkedList<T> {
      * Constructor for the list
      * @param list Elements that are added to the current list
      */
-    public MyLinkedList(MyLinkedList list){
+    public MyLinkedList(MyLinkedList<T> list){
         this.head = null;
+        this.size = list.size;
         addAll(list);
     }
 
@@ -57,9 +58,7 @@ public class MyLinkedList<T> {
         while(current.next != null){
             current = current.next;
         }
-        Node newNode = new Node(value, null);
-        if(newNode == null) return false;
-        current.next = newNode;
+        current.next = new Node(value, null);
         size++;
         return true;
     }
@@ -78,8 +77,7 @@ public class MyLinkedList<T> {
             count++;
             current = current.next;
         }
-        Node newNode = new Node(value, current.next);
-        current.next = newNode;
+        current.next = new Node(value, current.next);
         size++;
     }
 
@@ -88,7 +86,7 @@ public class MyLinkedList<T> {
      * @param list List to be added to the current list
      * @return Appends all of the elements in the specified collection to the end of this list, in the order that they are returned by the specified collection's iterator.
      */
-    public boolean addAll(MyLinkedList list){
+    public boolean addAll(MyLinkedList<T> list){
         if(list == null) return false;
         Node current = list.head;
         while(current != null){
@@ -104,7 +102,7 @@ public class MyLinkedList<T> {
      * @param list List to be added to the current list
      * @return Inserts all of the elements in the specified collection into this list, starting at the specified position.
      */
-    public boolean addAll(int index, MyLinkedList list){
+    public boolean addAll(int index, MyLinkedList<T> list){
         if(list == null || index > size()) return false;
         Node current = list.head;
         while(current != null){
@@ -119,8 +117,7 @@ public class MyLinkedList<T> {
      * @param value Value of the new Node
      */
     public void addFirst(T value){
-        Node newNode = new Node(value, head);
-        head = newNode;
+        head = new Node(value, head);
         size++;
     }
 
@@ -143,7 +140,7 @@ public class MyLinkedList<T> {
      *
      * @return Returns a shallow copy of this list
      */
-    public MyLinkedList clone(){
+    public MyLinkedList<T> clone(){
         return this;
     }
 
@@ -218,7 +215,7 @@ public class MyLinkedList<T> {
      * @return Returns a number, if the list represents a binary number, -1 otherwise
      */
     public int getDecimalValue() {
-        String binary = "";
+        StringBuilder binary = new StringBuilder();
         Node current = this.head;
         while(current != null){
             try{
@@ -226,7 +223,7 @@ public class MyLinkedList<T> {
                     System.out.println("list is only allowed to contain 0's and 1's");
                     return -1;
                 }
-                binary += current.value;
+                binary.append(current.value);
                 current = current.next;
             }catch(IllegalArgumentException e){
                 System.out.println("list is only allowed to contain 0's and 1's");
@@ -234,7 +231,7 @@ public class MyLinkedList<T> {
             }
 
         }
-        return Integer.parseInt(binary, 2);
+        return Integer.parseInt(binary.toString(), 2);
     }
 
     /**
@@ -251,7 +248,7 @@ public class MyLinkedList<T> {
      */
     public T getLast(){
         Node current = head;
-        while(current != null)
+        while(current.next != null)
             current = current.next;
         return current.value;
     }
@@ -490,7 +487,7 @@ public class MyLinkedList<T> {
      * @return The reversed list
      */
     public Node reverseList(Node node){
-        if(node == null) return node;
+        if(node == null) return null;
         Node next = node.next;
         node.next = null;
         while(next != null){
@@ -560,9 +557,7 @@ public class MyLinkedList<T> {
         return a;
     }
 
-    /**
-     * Helper methods
-     */
+    // Helper Methods //
 
     /**
      *
@@ -583,12 +578,11 @@ public class MyLinkedList<T> {
      * @return An iterator over the list
      */
     private Iterator<T> iterator(Node node){
-        Iterator<T> iter = new Iterator() {
+        return (Iterator<T>) new Iterator() {
             private Node current = node;
             @Override
             public boolean hasNext() {
-                if(current == null) return false;
-                return true;
+                return current != null;
             }
 
             @Override
@@ -598,7 +592,6 @@ public class MyLinkedList<T> {
                 return ans.value;
             }
         };
-        return iter;
     }
 
     /**
