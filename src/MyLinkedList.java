@@ -582,7 +582,8 @@ public class MyLinkedList<T> {
             private Node current = node;
             @Override
             public boolean hasNext() {
-                return current != null;
+                if(current == null) return false;
+                return current.next != null;
             }
 
             @Override
