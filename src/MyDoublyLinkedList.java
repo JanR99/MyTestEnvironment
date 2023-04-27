@@ -124,8 +124,13 @@ public class MyDoublyLinkedList<T> {
      * @return Returns true if the list was successfully added to the current list, false otherwise
      */
     public boolean addAll(int index, MyDoublyLinkedList<T> list) {
-        // TODO
-        return false;
+        Node<T> current = list.head;
+        while(current != null) {
+            if(!add(index++, current.value))
+                return false;
+            current = current.succ;
+        }
+        return true;
     }
 
     /**
@@ -260,41 +265,105 @@ public class MyDoublyLinkedList<T> {
         return tail.value;
     }
 
+    /**
+     *
+     * @param value Value to be searched for
+     * @return Returns the index of the first occurrence of the specified element in this list, or -1 if this list does not contain the element.
+     */
     public int indexOf(T value) {
-        // TODO
+        int count = 0;
+        Node<T> current = head;
+        while(current != null) {
+            if(current.value.equals(value)) return count;
+            count++;
+            current = current.succ;
+        }
         return -1;
     }
 
+    /**
+     *
+     * @param value Value to be searched for
+     * @return Returns the index of the last occurrence of the specified element in this list, or -1 if this list does not contain the element.
+     */
     public int lastIndexOf(T value) {
-        // TODO
-        return -1;
+        int ans = -1;
+        int count = 0;
+        Node<T> current = head;
+        while(current != null) {
+            if(current.value.equals(value)) ans = count;
+            count++;
+            current = current.succ;
+        }
+        return ans;
     }
 
+    /**
+     *
+     * @param index Index where to start the iterator
+     * @return Returns a list-iterator of the elements in this list (in proper sequence), starting at the specified position in the list.
+     */
     public Iterator<T> listIterator(int index) {
-        // TODO
-        return null;
+        int count = 0;
+        Node<T> tmp = head;
+        while(tmp != null) {
+            if(count == index) break;
+            count++;
+            tmp = tmp.succ;
+        }
+        Node<T> finalTmp = tmp;
+        return (Iterator<T>) new Iterator<>() {
+            Node<T> current = finalTmp;
+            @Override
+            public boolean hasNext() {
+                return current == null ? false : current.succ != null;
+            }
+
+            @Override
+            public Object next() {
+                return current == null ? null : current.succ;
+            }
+        };
     }
 
+    /**
+     * Adds the specified element as the tail (last element) of this list.
+     * @param value Value of the new Node
+     */
     public void offer(T value) {
-        //TODO
+        addLast(value);
     }
 
+    /**
+     * Inserts the specified element at the front of this list.
+     * @param value Value of the new Node
+     */
     public void offerFirst(T value) {
-        //TODO
+        addFirst(value);
     }
 
+    /**
+     * Inserts the specified element at the end of this list.
+     * @param value Value of the new Node
+     */
     public void offerLast(T value) {
-        //TODO
+        addLast(value);
     }
 
+    /**
+     *
+     * @return Retrieves, but does not remove, the head (first element) of this list.
+     */
     public T peek() {
-        // TODO
-        return null;
+        return head == null ? null : head.value;
     }
 
+    /**
+     *
+     * @return Retrieves, but does not remove, the first element of this list, or returns null if this list is empty.
+     */
     public T peekFirst() {
-        // TODO
-        return null;
+        return peek();
     }
 
     public T peekLast() {
