@@ -3,7 +3,6 @@ import java.util.Iterator;
 public class MyDoublyLinkedList<T> {
     
     //TODO test everything
-    //TODO maybe add some methods (addAll);
 
     /**
      * First element of the list
@@ -81,7 +80,7 @@ public class MyDoublyLinkedList<T> {
      * @return Returns true if the value was successfully added to the list, false otherwise
      */
     public boolean add(int index, T value) {
-        if(index >= size) return false;
+        if(index >= size || index < 0) return false;
         if(index == 0) { // Element is new head
             addFirst(value);
             return true;
@@ -124,6 +123,7 @@ public class MyDoublyLinkedList<T> {
      * @return Returns true if the list was successfully added to the current list, false otherwise
      */
     public boolean addAll(int index, MyDoublyLinkedList<T> list) {
+        if(index >= size || index < 0) return false;
         Node<T> current = list.head;
         while(current != null) {
             if(!add(index++, current.value))
@@ -222,7 +222,7 @@ public class MyDoublyLinkedList<T> {
     }
 
     public T get(int index) {
-        if(index >= size) return null;
+        if(index >= size || index < 0) return null;
         return getValueByIndex(index);
     }
 
@@ -366,37 +366,91 @@ public class MyDoublyLinkedList<T> {
         return peek();
     }
 
+    /**
+     *
+     * @return Retrieves, but does not remove, the last element of this list, or returns null if this list is empty.
+     */
     public T peekLast() {
-        //TODO
-        return null;
+        return getLast();
     }
 
+    /**
+     *
+     * @return Retrieves and removes the head (first element) of this list.
+     */
     public T poll() {
-        //TODO
-        return null;
+        if(head == null) return null;
+        T ans = head.value;
+        head = head.succ;
+        size--;
+        return ans;
     }
 
+    /**
+     *
+     * @return Retrieves and removes the first element of this list, or returns null if this list is empty.
+     */
     public T pollFirst() {
-        //TODO
-        return null;
+        return poll();
     }
 
+    /**
+     *
+     * @return Retrieves and removes the last element of this list, or returns null if this list is empty.
+     */
+    public T pollLast() {
+        if(tail == null) return null;
+        T ans = tail.value;
+        tail = tail.prev;
+        return ans;
+    }
+
+    /**
+     *
+     * @return Pops an element from the stack represented by this list.
+     */
     public T pop() {
-        //TODO
-        return null;
+        return pollFirst();
     }
 
+    /**
+     * Pushes an element onto the stack represented by this list.
+     * @param value Value of the new Node
+     */
     public void push(T value) {
-        //TODO
+        addFirst(value);
     }
 
+    /**
+     *
+     * @return Retrieves and removes the head (first element) of this list.
+     */
     public T remove() {
         //TODO
         return null;
     }
 
+    /**
+     *
+     * @param index Index of the element in this list
+     * @return Removes the element at the specified position in this list.
+     */
     public T remove(int index) {
-        //TODO
+        if(index >= size || index < 0) return null;
+        int count = 0;
+        Node<T> current = head;
+        while(current != null) {
+            if(count == index) {
+                if(current.prev != null) {
+                    current.prev.succ = current.succ;
+                }
+                if(current.succ != null) {
+                    current.succ.prev = current.prev;
+                }
+                return current.value;
+            }
+            current = current.succ;
+        }
         return null;
     }
 
@@ -431,29 +485,69 @@ public class MyDoublyLinkedList<T> {
         return false;
     }
 
+    /**
+     *
+     * @return Removes and returns the first element from this list.
+     */
     public T removeFirst() {
-        //TODO
-        return null;
+        return remove();
     }
 
+    /**
+     *
+     * @param value Value that should be removed
+     * @return Removes the first occurrence of the specified element in this list (when traversing the list from head to tail).
+     */
     public boolean removeFirstOccurrence(T value) {
-        //TODO
-        return false;
+        return remove(value);
     }
 
+    /**
+     *
+     * @return Removes and returns the last element from this list.
+     */
     public T removeLast() {
-        //TODO
-        return null;
+        return remove(size - 1);
     }
 
+    /**
+     *
+     * @param value Value that should be removed
+     * @return Removes the last occurrence of the specified element in this list (when traversing the list from head to tail).
+     */
     public boolean removeLastOccurrence(T value) {
-        //TODO
+        Node<T> current = tail;
+        while(current != null) {
+            if(value.equals(current.value)) {
+                if(current.prev != null) {
+                    current.prev.succ = current.succ;
+                }
+                if(current.succ != null) {
+                    current.succ.prev = current.prev;
+                }
+                return true;
+            }
+            current = current.prev;
+        }
         return false;
     }
 
+    /**
+     *
+     * @param node Head of the list
+     * @return The reversed list
+     */
     public Node<T> reverseList(Node<T> node) {
-        //TODO
-        return null;
+        if(node == null) return null;
+        Node<T> next = node.succ;
+        node.succ = null;
+        while(next != null){
+            Node<T> temp = next.succ;
+            next.succ = node;
+            node = next;
+            next = temp;
+        }
+        return node;
     }
 
     /**
@@ -475,24 +569,63 @@ public class MyDoublyLinkedList<T> {
         return ans;
     }
 
+    /**
+     *
+     * @param index Index of the element in this list
+     * @param value Value the node's value should be changed to
+     * @return the element previously at the specified position, or null if there is no element at this position
+     */
     public T set(int index, T value) {
-        //TODO
+        if(index >= size || index < 0) return null;
+        Node<T> current = head;
+        int count = 0;
+        while(current != null) {
+            if(count == index) {
+                T ans = current.value;
+                current.value = value;
+                return ans;
+            }
+            current = current.succ;
+        }
         return null;
     }
 
+    /**
+     *
+     * @return Returns the size of the list
+     */
     public int size() {
-        //TODO
-        return -1;
+        return size;
     }
 
+    /**
+     *
+     * @return Returns an array containing all of the elements in this list in proper sequence (from first to last element).
+     */
     public Object[] toArray() {
-        //TODO
-        return null;
+        Object[] arr = new Object[size];
+        Node<T> current = head;
+        int index = 0;
+        while(current != null) {
+            arr[index++] = current;
+            current = current.succ;
+        }
+        return arr;
     }
 
+    /**
+     *
+     * @param a The array to put the values in
+     * @return Returns an array containing all of the elements in this list in proper sequence (from first to last element); the runtime type of the returned array is that of the specified array.
+     */
     public T[] toArray(T[] a) {
-        //TODO
-        return null;
+        int index = 0;
+        Node<T> current = head;
+        while(index < a.length && current != null) {
+            a[index++] = current.value;
+            current = current.succ;
+        }
+        return a;
     }
 
     /**
