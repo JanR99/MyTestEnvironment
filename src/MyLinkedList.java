@@ -5,12 +5,12 @@ public class MyLinkedList<T> {
     /**
      * Represents a Node of the list
      */
-    private class Node{
+    private static class Node<T>{
 
         private T value;
-        private Node next;
+        private Node<T> next;
 
-        public Node(T value, Node next){
+        public Node(T value, Node<T> next){
             this.value = value;
             this.next = next;
         }
@@ -39,7 +39,7 @@ public class MyLinkedList<T> {
     /**
      * Represents the head of the list
      */
-    private Node head;
+    private Node<T> head;
     private int size;
 
     /**
@@ -49,15 +49,15 @@ public class MyLinkedList<T> {
      */
     public boolean add(T value){
         if(head == null){
-            head = new Node(value, null);
+            head = new Node<>(value, null);
             size++;
             return true;
         }
-        Node current = head;
+        Node<T> current = head;
         while(current.next != null){
             current = current.next;
         }
-        current.next = new Node(value, null);
+        current.next = new Node<>(value, null);
         size++;
         return true;
     }
@@ -69,14 +69,14 @@ public class MyLinkedList<T> {
      */
     public void add(int index, T value){
         // Cant be connected to the list
-        if(index > size()) return;
+        if(index >= size || index < 0) return;
         int count = 0;
-        Node current = head;
+        Node<T> current = head;
         while(count != index - 1){
             count++;
             current = current.next;
         }
-        current.next = new Node(value, current.next);
+        current.next = new Node<>(value, current.next);
         size++;
     }
 
@@ -87,7 +87,7 @@ public class MyLinkedList<T> {
      */
     public boolean addAll(MyLinkedList<T> list){
         if(list == null) return false;
-        Node current = list.head;
+        Node<T> current = list.head;
         while(current != null){
             add(current.value);
             current = current.next;
@@ -102,8 +102,8 @@ public class MyLinkedList<T> {
      * @return Inserts all of the elements in the specified collection into this list, starting at the specified position.
      */
     public boolean addAll(int index, MyLinkedList<T> list){
-        if(list == null || index > size()) return false;
-        Node current = list.head;
+        if(list == null || index > size || index < 0) return false;
+        Node<T> current = list.head;
         while(current != null){
             add(index++, current.value);
             current = current.next;
@@ -116,7 +116,7 @@ public class MyLinkedList<T> {
      * @param value Value of the new Node
      */
     public void addFirst(T value){
-        head = new Node(value, head);
+        head = new Node<>(value, head);
         size++;
     }
 
@@ -133,7 +133,7 @@ public class MyLinkedList<T> {
      */
     public void clear(){
         head = null;
-        this.size = 0;
+        size = 0;
     }
 
     /**
@@ -150,7 +150,7 @@ public class MyLinkedList<T> {
      * @return True if the value is in this list, false otherwise
      */
     public boolean contains(T value){
-        Node current = head;
+        Node<T> current = head;
         while(current != null){
             if(current.value.equals(value)) return true;
             current = current.next;
@@ -163,7 +163,7 @@ public class MyLinkedList<T> {
      * @return Return an Iterator over the elements in reversed order
      */
     public Iterator<T> descendingIterator(){
-        Node tail = reverseList(head);
+        Node<T> tail = reverseList(head);
         return iterator(tail);
     }
 
@@ -172,14 +172,14 @@ public class MyLinkedList<T> {
      * @return Retrieves, but does not remove, the head (first element) of this list.
      */
     public T element(){
-        return head.value;
+        return head == null ? null : head.value;
     }
 
     /**
      *
      * @return Returns the middle Node, or the right middle node if the length is even
      */
-    public Node findMiddleNode(){
+    public Node<T> findMiddleNode(){
         return findMiddle();
     }
 
@@ -197,8 +197,8 @@ public class MyLinkedList<T> {
      * @return Returns the element at the specified position in this list, null if the index is bigger than the size of the list
      */
     public T get(int index){
-        if(index >= size()) return null;
-        Node current = head;
+        if(index >= size || index < 0) return null;
+        Node<T> current = head;
         int counter = 0;
         while(current != null){
             if(counter == index){
@@ -216,7 +216,7 @@ public class MyLinkedList<T> {
      */
     public int getDecimalValue() {
         StringBuilder binary = new StringBuilder();
-        Node current = this.head;
+        Node<T> current = this.head;
         while(current != null){
             try{
                 if(!current.value.equals(0) && !current.value.equals(1)){
@@ -247,7 +247,8 @@ public class MyLinkedList<T> {
      * @return Returns the last element in this list.
      */
     public T getLast(){
-        Node current = head;
+        if(head == null) return null;
+        Node<T> current = head;
         while(current.next != null)
             current = current.next;
         return current.value;
@@ -260,9 +261,9 @@ public class MyLinkedList<T> {
      */
     public int indexOf(T value){
         int count = 0;
-        Node current = head;
+        Node<T> current = head;
         while(current != null){
-            if(current.value == value) return count;
+            if(current.value.equals(value)) return count;
             count++;
             current = current.next;
         }
@@ -277,9 +278,9 @@ public class MyLinkedList<T> {
     public int lastIndexOf(T value){
         int ans = -1;
         int count = 0;
-        Node current = head;
+        Node<T> current = head;
         while(current != null){
-            if(current.value == value) ans = count;
+            if(current.value.equals(value)) ans = count;
             count++;
             current = current.next;
         }
@@ -292,11 +293,10 @@ public class MyLinkedList<T> {
      * @return Returns a list-iterator of the elements in this list (in proper sequence), starting at the specified position in the list.
      */
     public Iterator<T> listIterator(int index){
-        if(index >= size()) return null;
+        if(index >= size || index < 0) return null;
         int count = 0;
-        Node current = head;
-        while(count < index){
-            count++;
+        Node<T> current = head;
+        while(count++ < index){
             current = current.next;
         }
         return iterator(current);
@@ -331,7 +331,7 @@ public class MyLinkedList<T> {
      * @return Retrieves, but does not remove, the head (first element) of this list.
      */
     public T peek(){
-        return head.value;
+        return head == null ? null : head.value;
     }
 
     /**
@@ -355,6 +355,7 @@ public class MyLinkedList<T> {
      * @return Retrieves and removes the head (first element) of this list.
      */
     public T poll(){
+        if(head == null) return null;
         T ans = head.value;
         head = head.next;
         size--;
@@ -381,7 +382,7 @@ public class MyLinkedList<T> {
             size--;
             return ans;
         }
-        Node current = head;
+        Node<T> current = head;
         while(current.next.next != null){
             current = current.next;
         }
@@ -421,10 +422,10 @@ public class MyLinkedList<T> {
      * @return Removes the element at the specified position in this list.
      */
     public T remove(int index){
-        if(index >= size()) return null;
+        if(index >= size || index < 0) return null;
         if(index == 0) return remove();
         int count = 0;
-        Node current = head;
+        Node<T> current = head;
         while(count < index - 1){
             count++;
             current = current.next;
@@ -466,7 +467,7 @@ public class MyLinkedList<T> {
      * @return Removes and returns the last element from this list.
      */
     public T removeLast(){
-        return remove(size() - 1);
+        return remove(size - 1);
     }
 
     /**
@@ -475,7 +476,7 @@ public class MyLinkedList<T> {
      * @return Removes the last occurrence of the specified element in this list (when traversing the list from head to tail).
      */
     public boolean removeLastOccurrence(T value){
-        Node tail = reverseList(head);
+        Node<T> tail = reverseList(head);
         boolean ans = remove(value, tail);
         this.head = reverseList(tail);
         return ans;
@@ -486,12 +487,12 @@ public class MyLinkedList<T> {
      * @param node Head of the list
      * @return The reversed list
      */
-    public Node reverseList(Node node){
+    public Node<T> reverseList(Node<T> node){
         if(node == null) return null;
-        Node next = node.next;
+        Node<T> next = node.next;
         node.next = null;
         while(next != null){
-            Node temp = next.next;
+            Node<T> temp = next.next;
             next.next = node;
             node = next;
             next = temp;
@@ -506,9 +507,9 @@ public class MyLinkedList<T> {
      * @return the element previously at the specified position, or null if there is no element at this position
      */
     public T set(int index, T value){
-        if(index >= size()) return null;
+        if(index >= size || index < 0) return null;
         int count = 0;
-        Node current = head;
+        Node<T> current = head;
         while(count < index){
             count++;
             current = current.next;
@@ -523,7 +524,7 @@ public class MyLinkedList<T> {
      * @return Returns the size of the list
      */
     public int size(){
-        return this.size;
+        return size;
     }
 
     /**
@@ -532,10 +533,10 @@ public class MyLinkedList<T> {
      */
     public Object[] toArray(){
         Object[] arr = new Object[size()];
-        Node current = head;
+        Node<T> current = head;
         int index = 0;
         while(current != null){
-            arr[index++] = current.value;
+            arr[index++] = current;
             current = current.next;
         }
         return arr;
@@ -548,7 +549,7 @@ public class MyLinkedList<T> {
      */
     public T[] toArray(T[] a){
         int index = 0;
-        Node current = head;
+        Node<T> current = head;
         while(index < a.length && current != null){
             a[index] = current.value;
             index++;
@@ -563,8 +564,8 @@ public class MyLinkedList<T> {
      *
      * @return Returns the middle Node, or the right middle node if the length is even
      */
-    private Node findMiddle(){
-        Node slow = this.head, fast = this.head;
+    private Node<T> findMiddle(){
+        Node<T> slow = this.head, fast = this.head;
         while(fast != null && fast.next != null){
             slow = slow.next;
             fast = fast.next.next;
@@ -577,9 +578,9 @@ public class MyLinkedList<T> {
      * @param node Start Node for the Iterator
      * @return An iterator over the list
      */
-    private Iterator<T> iterator(Node node){
-        return (Iterator<T>) new Iterator() {
-            private Node current = node;
+    private Iterator<T> iterator(Node<T> node){
+        return (Iterator<T>) new Iterator<>() {
+            private final Node<T> current = node;
             @Override
             public boolean hasNext() {
                 if(current == null) return false;
@@ -599,13 +600,13 @@ public class MyLinkedList<T> {
      * @param head Head of the list
      * @return Removes the first occurrence of the specified element from this list, if it is present.
      */
-    public boolean remove(T value, Node head){
+    public boolean remove(T value, Node<T> head){
         if(head.value == value){
             this.head = head.next;
             size--;
             return true;
         }
-        Node current = head;
+        Node<T> current = head;
         while(current.next != null){
             if(current.next.value == value){
                 current.next = current.next.next;
